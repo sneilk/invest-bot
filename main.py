@@ -14,6 +14,7 @@ from invest_api.services.market_data_service import MarketDataService
 from invest_api.services.operations_service import OperationService
 from invest_api.services.orders_service import OrderService
 from invest_api.services.market_data_stream_service import MarketDataStreamService
+from invest_api.utils import CONF
 from trade_system.strategies.strategy_factory import StrategyFactory
 from trading.trade_service import TradeService
 
@@ -68,6 +69,7 @@ if __name__ == "__main__":
         stream_service = MarketDataStreamService(config.tinkoff_token, config.tinkoff_app_name)
         market_data_service = MarketDataService(config.tinkoff_token, config.tinkoff_app_name)
 
+        CONF["IS_SANDBOX"] = config.is_sandbox
         if account_service.verify_token():
             logger.info(f"Blog settings: {config.blog_settings}")
 

@@ -2,10 +2,28 @@ import uuid
 from decimal import Decimal
 
 from grpc import StatusCode
-from tinkoff.invest import MoneyValue, Quotation, Candle, HistoricCandle
+from tinkoff.invest import MoneyValue, Quotation, Candle, HistoricCandle, Client
 from tinkoff.invest.utils import quotation_to_decimal, decimal_to_quotation
+from tinkoff.invest.sandbox.client import SandboxClient
+
 
 __all__ = ()
+
+CONF = {"IS_SANDBOX": False}
+
+
+def open_account(
+    client: Client | SandboxClient
+):
+    account_response = client.open_sandbox_account()
+    account_id = account_response.account_id
+    client.sandbox_pay_in(account_id=account_id, amount=100000)
+
+
+def close_account(
+    client, account_id
+):
+    client.close_sandbox_account(account_id=account_id)
 
 
 def rub_currency_name() -> str:
@@ -32,6 +50,10 @@ def decimal_to_moneyvalue(decimal: Decimal, currency: str = rub_currency_name())
         units=quotation.units,
         nano=quotation.nano
     )
+
+
+def get_client():
+    return SandboxClient if CONF["IS_SANDBOX"] else Client
 
 
 def generate_order_id() -> str:

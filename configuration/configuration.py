@@ -16,6 +16,7 @@ class ProgramConfiguration:
 
         self.__tinkoff_token = config["INVEST_API"]["TOKEN"]
         self.__tinkoff_app_name = config["INVEST_API"]["APP_NAME"]
+        self.__is_sandbox = config["INVEST_API"]["IS_SANDBOX"]
 
         self.__blog_settings = BlogSettings(
             blog_status=bool(int(config["BLOG"]["STATUS"])),
@@ -50,6 +51,10 @@ class ProgramConfiguration:
     @property
     def tinkoff_token(self) -> str:
         return self.__tinkoff_token
+
+    @property
+    def is_sandbox(self) -> bool:
+        return self.__is_sandbox
 
     @property
     def tinkoff_app_name(self) -> str:

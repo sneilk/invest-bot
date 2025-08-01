@@ -1,7 +1,8 @@
 import logging
 
-from tinkoff.invest import Client, AccessLevel, AccountType, AccountStatus
+from tinkoff.invest import AccessLevel, AccountType, AccountStatus
 
+from invest_api.utils import get_client
 from configuration.settings import AccountSettings
 from invest_api.invest_error_decorators import invest_error_logging, invest_api_retry
 
@@ -31,7 +32,10 @@ class AccountService:
         result = None
         max_liquid_portfolio = -1
 
-        with Client(self.__token, app_name=self.__app_name) as client:
+        with get_client()(self.__token, app_name=self.__app_name) as client:
+            logger.info("Count of accounts: {}".format(
+                len(client.users.get_accounts().accounts)
+            ))
             logger.info("List of client accounts:")
 
             for account in client.users.get_accounts().accounts:
@@ -62,7 +66,7 @@ class AccountService:
         """
         logger.info(f"Start client verification. App name: {self.__app_name}")
 
-        with Client(self.__token, app_name=self.__app_name) as client:
+        with get_client()(self.__token, app_name=self.__app_name) as client:
             accounts = client.users.get_accounts()
 
             logger.info("List of client accounts:")

@@ -61,7 +61,8 @@ class Trader:
             logger.info("No shares to trade today.")
             return None
 
-        self.__clear_all_positions(account_id, today_trade_strategies)
+        # TODO: check why not clear orders in sandbox
+        # self.__clear_all_positions(account_id, today_trade_strategies)
 
         rub_before_trade_day = self.__operation_service.available_rub_on_account(account_id)
         logger.info(f"Amount of RUB on account {rub_before_trade_day} and minimum for trading: {min_rub}")

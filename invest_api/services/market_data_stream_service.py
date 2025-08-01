@@ -3,13 +3,13 @@ import datetime
 import logging
 from typing import Generator
 
-from tinkoff.invest import Client, CandleInstrument, SubscriptionInterval, InfoInstrument, TradeInstrument, \
+from tinkoff.invest import CandleInstrument, SubscriptionInterval, InfoInstrument, TradeInstrument, \
     MarketDataResponse, Candle, AsyncClient, AioRequestError
 from tinkoff.invest.market_data_stream.async_market_data_stream_manager import AsyncMarketDataStreamManager
 from tinkoff.invest.market_data_stream.market_data_stream_interface import IMarketDataStreamManager
 from tinkoff.invest.market_data_stream.market_data_stream_manager import MarketDataStreamManager
 
-from invest_api.utils import invest_api_retry_status_codes
+from invest_api.utils import invest_api_retry_status_codes, get_client
 
 __all__ = ("MarketDataStreamService")
 
@@ -34,7 +34,7 @@ class MarketDataStreamService:
         """
         logger.debug(f"Starting candles stream")
 
-        with Client(self.__token, app_name=self.__app_name) as client:
+        with get_client()(self.__token, app_name=self.__app_name) as client:
             market_data_candles_stream: MarketDataStreamManager = client.create_market_data_stream()
 
             logger.info(f"Subscribe candles: {figies}")

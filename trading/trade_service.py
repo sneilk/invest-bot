@@ -11,6 +11,7 @@ from invest_api.services.market_data_service import MarketDataService
 from invest_api.services.operations_service import OperationService
 from invest_api.services.orders_service import OrderService
 from invest_api.services.market_data_stream_service import MarketDataStreamService
+from invest_api.utils import CONF, close_account, open_account
 from trade_system.strategies.base_strategy import IStrategy
 from trading.trader import Trader
 
@@ -50,6 +51,11 @@ class TradeService:
         self.__strategies = strategies
 
     async def worker(self) -> None:
+        # if CONF["IS_SANDBOX"]:
+        #     logger.info("Open account for trading")
+        #     open_account(self.client_service)
+
+        # account_id = None
         try:
             logger.info("Finding account for trading")
             account_id = self.__account_service.trading_account_id(self.__account_settings)
@@ -62,8 +68,11 @@ class TradeService:
 
         except Exception as ex:
             logger.error(f"Start trading error: {repr(ex)}")
+            # if account_id:
+            #     close_account(self.client_service, account_id)
             return None
 
+        # close_account(self.client_service, account_id)
         await self.__working_loop(account_id)
 
     async def __working_loop(self, account_id: str) -> None:

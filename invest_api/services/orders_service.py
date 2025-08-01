@@ -1,8 +1,8 @@
 import logging
 
-from tinkoff.invest import Client, OrderDirection, Quotation, OrderType, PostOrderResponse, OrderState
+from tinkoff.invest import OrderDirection, Quotation, OrderType, PostOrderResponse, OrderState
 
-from invest_api.utils import generate_order_id
+from invest_api.utils import generate_order_id, get_client
 from invest_api.invest_error_decorators import invest_error_logging, invest_api_retry
 
 __all__ = ("OrderService")
@@ -30,7 +30,7 @@ class OrderService:
             order_type: OrderType,
             order_id: str
     ) -> PostOrderResponse:
-        with Client(self.__token, app_name=self.__app_name) as client:
+        with get_client()(self.__token, app_name=self.__app_name) as client:
             return client.orders.post_order(
                 figi=figi,
                 quantity=count_lots,
@@ -56,6 +56,8 @@ class OrderService:
             f"figi: {figi}, count_lots: {count_lots}, is_buy: {is_buy}"
         )
 
+        # ToDo: сделать покупку/продажу для числа позиций > N с интервалом между выставлением ордеров (порисерчить нужно ли это)
+        # ToDo: сделать параметр покупки "не дороже M" или "не дешевле М"
         order = self.__post_order(
             account_id=account_id,
             figi=figi,
@@ -73,17 +75,17 @@ class OrderService:
     @invest_api_retry()
     @invest_error_logging
     def cancel_order(self, account_id: str, order_id: str) -> None:
-        with Client(self.__token, app_name=self.__app_name) as client:
+        with get_client()(self.__token, app_name=self.__app_name) as client:
             client.orders.cancel_order(account_id=account_id, order_id=order_id)
 
     @invest_api_retry()
     @invest_error_logging
     def get_order_state(self, account_id: str, order_id: str) -> OrderState:
-        with Client(self.__token, app_name=self.__app_name) as client:
+        with get_client()(self.__token, app_name=self.__app_name) as client:
             return client.orders.get_order_state(account_id=account_id, order_id=order_id)
 
     @invest_api_retry()
     @invest_error_logging
     def get_orders(self, account_id: str) -> list[OrderState]:
-        with Client(self.__token, app_name=self.__app_name) as client:
+        with get_client()(self.__token, app_name=self.__app_name) as client:
             return client.orders.get_orders(account_id=account_id).orders
