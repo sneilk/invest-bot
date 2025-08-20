@@ -84,7 +84,6 @@ class Blogger:
         """
         if self.__blog_status and trade_order:
             signal_type = Blogger.__signal_type_to_message_test(trade_order.signal.signal_type)
-            # ToDo: add current price and volume
             self.__send_text_message(
                 f"{self.__trade_strategies[trade_order.signal.figi].ticker} position {signal_type} has been opened. "
                 f"Take profit level: {trade_order.signal.take_profit_level:.2f}. "
