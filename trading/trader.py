@@ -198,7 +198,12 @@ class Trader:
                                         open_order.order_id,
                                         signal_new
                                     )
-                                    self.__blogger.open_position_message(open_position)
+                                    self.__blogger.open_position_message(
+                                        open_position,
+                                        available_lots=available_lots,
+                                        status=open_order.execution_report_status,
+                                        price=quotation_to_decimal(candle.close),
+                                    )
                                     logger.info(f"Open position: {open_position}")
                                 else:
                                     logger.info(f"Open order status failed: {open_order}")

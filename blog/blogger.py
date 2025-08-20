@@ -2,7 +2,7 @@ import asyncio
 import logging
 from decimal import Decimal
 
-from tinkoff.invest import OrderState
+from tinkoff.invest import OrderState, OrderExecutionReportStatus
 
 from configuration.settings import BlogSettings, StrategySettings
 from invest_api.utils import moneyvalue_to_decimal
@@ -72,7 +72,13 @@ class Blogger:
                 f"{self.__trade_strategies[trade_order.signal.figi].ticker} position {signal_type} has been closed."
             )
 
-    def open_position_message(self, trade_order: TradeOrder) -> None:
+    def open_position_message(
+            self,
+            trade_order: TradeOrder,
+            available_lots: int,
+            status: OrderExecutionReportStatus,
+            price: Decimal,
+    ) -> None:
         """
         The method sends information about opened position.
         """
@@ -83,6 +89,9 @@ class Blogger:
                 f"{self.__trade_strategies[trade_order.signal.figi].ticker} position {signal_type} has been opened. "
                 f"Take profit level: {trade_order.signal.take_profit_level:.2f}. "
                 f"Stop loss level: {trade_order.signal.stop_loss_level:.2f}."
+                f"Current level: {price:.2f}."
+                f"Current volume: {available_lots}."
+                f"With status: {status.value}."
             )
 
     def trading_depo_summary_message(
