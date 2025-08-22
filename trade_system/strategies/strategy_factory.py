@@ -12,8 +12,7 @@ class StrategyFactory:
     """
     @staticmethod
     def new_factory(strategy_name: str, *args, **kwargs) -> Optional[IStrategy]:
-        match strategy_name:
-            case "ChangeAndVolumeStrategy":
-                return ChangeAndVolumeStrategy(*args, **kwargs)
-            case _:
-                return None
+        if strategy_name == "ChangeAndVolumeStrategy":
+            return ChangeAndVolumeStrategy(*args, **kwargs)
+        else:
+            return None

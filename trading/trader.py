@@ -155,7 +155,7 @@ class Trader:
                     logger.error(f"Error check Stop loss and Take profit levels: {repr(ex)}")
 
             if candle.time > current_figi_candle.time and \
-                    datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc) <= signals_before_time:
+                    datetime.datetime.now().replace(tzinfo=datetime.timezone.utc) <= signals_before_time:
                 signal_new = strategies[candle.figi].analyze_candles(
                     [candle_to_historiccandle(current_figi_candle)]
                 )

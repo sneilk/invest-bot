@@ -1,6 +1,7 @@
 import asyncio
 import logging
 from decimal import Decimal
+from typing import Optional
 
 from tinkoff.invest import OrderState, OrderExecutionReportStatus, PositionsResponse
 
@@ -186,7 +187,7 @@ class Blogger:
         return "long" if signal_type == SignalType.LONG else "short"
 
 
-    def status_message(self, positions: PositionsResponse, money_on_account: int) -> None:
+    def status_message(self, positions: PositionsResponse, money_on_account: Optional[Decimal]) -> None:
         balance = positions.money.units
 
         securities = []
@@ -200,7 +201,7 @@ class Blogger:
             )
 
         self.__send_text_message(
-            f"Total money: {money_on_account}.\n"
+            f"Total money: {money_on_account or 0}.\n"
             f"Balance: {balance}.\n"
             f"Count of positions: {len(positions.securities)}.\n" + "\n".join(securities)
         )
