@@ -53,6 +53,9 @@ class OperationService:
 
         return positions.securities if positions else None
 
+    def get_positions(self, account_id: str) -> PositionsResponse:
+        return self.__get_positions(account_id)
+
     @invest_api_retry()
     @invest_error_logging
     def __get_positions(self, account_id: str) -> PositionsResponse:

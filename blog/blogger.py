@@ -2,7 +2,7 @@ import asyncio
 import logging
 from decimal import Decimal
 
-from tinkoff.invest import OrderState, OrderExecutionReportStatus
+from tinkoff.invest import OrderState, OrderExecutionReportStatus, PositionsResponse
 
 from configuration.settings import BlogSettings, StrategySettings
 from invest_api.utils import moneyvalue_to_decimal
@@ -184,3 +184,23 @@ class Blogger:
     @staticmethod
     def __signal_type_to_message_test(signal_type: SignalType) -> str:
         return "long" if signal_type == SignalType.LONG else "short"
+
+
+    def status_message(self, positions: PositionsResponse, money_on_account: int) -> None:
+        balance = positions.money.units
+
+        securities = []
+        for sec in positions.securities:
+            type_ = "short"
+            if sec.balance < 0:
+                type_ = "long"
+
+            securities.append(
+                f"Active {self.__trade_strategies[sec.figi].ticker} purchased in {type_} in {sec.units} units."
+            )
+
+        self.__send_text_message(
+            f"Total money: {money_on_account}.\n"
+            f"Balance: {balance}.\n"
+            f"Count of positions: {len(positions.securities)}.\n" + "\n".join(securities)
+        )
