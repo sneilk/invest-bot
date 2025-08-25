@@ -216,12 +216,13 @@ class Trader:
 
             current_candles[candle.figi] = candle
 
-            if datetime.datetime.now() > last_status_sent_at + datetime.timedelta(hours=1):
+            if datetime.datetime.now() > (last_status_sent_at + datetime.timedelta(hours=1)):
                 positions = self.__operation_service.get_positions(account_id=account_id)
                 money_on_account = self.__operation_service.available_rub_on_account(account_id=account_id)
                 self.__blogger.status_message(
                     positions=positions, money_on_account=money_on_account
                 )
+                last_status_sent_at = datetime.datetime.now()
 
         logger.info("Today trading has been completed")
 
