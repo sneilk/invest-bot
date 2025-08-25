@@ -197,7 +197,7 @@ class Blogger:
                 type_ = "long"
 
             securities.append(
-                f"Active {self.__trade_strategies[sec.figi].ticker} purchased in {type_} in {sec.units} units."
+                f"Active {self.__trade_strategies[sec.figi].ticker} purchased in {type_} in {abs(sec.balance)} units."
             )
 
         self.__send_text_message(
