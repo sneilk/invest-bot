@@ -188,7 +188,7 @@ class Blogger:
 
 
     def status_message(self, positions: PositionsResponse, money_on_account: Optional[Decimal]) -> None:
-        balance = positions.money.units
+        balance = positions.money[0].units
 
         securities = []
         for sec in positions.securities:
