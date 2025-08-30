@@ -10,6 +10,7 @@ from invest_api.services.instruments_service import InstrumentService
 from invest_api.services.market_data_service import MarketDataService
 from invest_api.services.operations_service import OperationService
 from invest_api.services.orders_service import OrderService
+from invest_api.services.csv_service import CSVService
 from invest_api.services.market_data_stream_service import MarketDataStreamService
 from invest_api.utils import CONF, close_account, open_account
 from trade_system.strategies.base_strategy import IStrategy
@@ -33,6 +34,7 @@ class TradeService:
             order_service: OrderService,
             stream_service: MarketDataStreamService,
             market_data_service: MarketDataService,
+            csv_service: CSVService,
             blogger: Blogger,
             account_settings: AccountSettings,
             trading_settings: TradingSettings,
@@ -43,6 +45,7 @@ class TradeService:
         self.__instrument_service = instrument_service
         self.__operation_service = operation_service
         self.__order_service = order_service
+        self.__csv_service = csv_service
         self.__stream_service = stream_service
         self.__market_data_service = market_data_service
         self.__blogger = blogger
@@ -106,6 +109,7 @@ class TradeService:
                         order_service=self.__order_service,
                         stream_service=self.__stream_service,
                         market_data_service=self.__market_data_service,
+                        csv_service=self.__csv_service,
                         blogger=self.__blogger
                     ).trade_day(
                         account_id,

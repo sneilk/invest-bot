@@ -9,6 +9,7 @@ from blog.blogger import Blogger
 from configuration.configuration import ProgramConfiguration
 from invest_api.services.accounts_service import AccountService
 from invest_api.services.client_service import ClientService
+from invest_api.services.csv_service import CSVService
 from invest_api.services.instruments_service import InstrumentService
 from invest_api.services.market_data_service import MarketDataService
 from invest_api.services.operations_service import OperationService
@@ -61,13 +62,14 @@ if __name__ == "__main__":
     except Exception as ex:
         logger.critical("Load configuration error: %s", repr(ex))
     else:
-        account_service = AccountService(config.tinkoff_token, config.tinkoff_app_name)
+        account_service = AccountService(config.tinkoff_token, config.tinkoff_app_name, config.account_id)
         client_service = ClientService(config.tinkoff_token, config.tinkoff_app_name)
         instrument_service = InstrumentService(config.tinkoff_token, config.tinkoff_app_name)
         operation_service = OperationService(config.tinkoff_token, config.tinkoff_app_name)
         order_service = OrderService(config.tinkoff_token, config.tinkoff_app_name)
         stream_service = MarketDataStreamService(config.tinkoff_token, config.tinkoff_app_name)
         market_data_service = MarketDataService(config.tinkoff_token, config.tinkoff_app_name)
+        csv_service = CSVService(file_name=config.filename)
 
         CONF["IS_SANDBOX"] = config.is_sandbox
         if account_service.verify_token():
@@ -87,6 +89,7 @@ if __name__ == "__main__":
                 operation_service=operation_service,
                 order_service=order_service,
                 stream_service=stream_service,
+                csv_service=csv_service,
                 market_data_service=market_data_service,
                 blogger=Blogger(config.blog_settings, config.trade_strategy_settings, messages_queue),
                 account_settings=config.account_settings,

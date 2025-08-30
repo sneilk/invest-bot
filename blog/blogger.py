@@ -192,9 +192,9 @@ class Blogger:
 
         securities = []
         for sec in positions.securities:
-            type_ = "short"
+            type_ = "long"
             if sec.balance < 0:
-                type_ = "long"
+                type_ = "short"
 
             securities.append(
                 f"Active {self.__trade_strategies[sec.figi].ticker} purchased in {type_} in {abs(sec.balance)} units."

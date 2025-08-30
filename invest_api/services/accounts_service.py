@@ -15,9 +15,10 @@ class AccountService:
     """
     The class encapsulate tinkoff account api
     """
-    def __init__(self, token: str, app_name: str) -> None:
+    def __init__(self, token: str, app_name: str, account_id: str) -> None:
         self.__token = token
         self.__app_name = app_name
+        self.__account_id = account_id
 
     @invest_api_retry()
     @invest_error_logging
@@ -31,6 +32,9 @@ class AccountService:
         """
         result = None
         max_liquid_portfolio = -1
+
+        if self.__account_id:
+            return self.__account_id
 
         with get_client()(self.__token, app_name=self.__app_name) as client:
             logger.info("Count of accounts: {}".format(

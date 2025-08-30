@@ -10,6 +10,7 @@ from invest_api.services.client_service import ClientService
 from invest_api.services.instruments_service import InstrumentService
 from invest_api.services.market_data_service import MarketDataService
 from invest_api.services.operations_service import OperationService
+from invest_api.services.csv_service import CSVService
 from invest_api.services.orders_service import OrderService
 from invest_api.services.market_data_stream_service import MarketDataStreamService
 from invest_api.utils import candle_to_historiccandle
@@ -36,9 +37,11 @@ class Trader:
             order_service: OrderService,
             stream_service: MarketDataStreamService,
             market_data_service: MarketDataService,
+            csv_service: CSVService,
             blogger: Blogger
     ) -> None:
         self.__today_trade_results: TradeResults = None
+        self.__csv_servce = csv_service
         self.__client_service = client_service
         self.__instrument_service = instrument_service
         self.__operation_service = operation_service
@@ -87,6 +90,10 @@ class Trader:
 
         logger.info("Finishing trading today")
         self.__blogger.finish_trading_message()
+
+        logger.info("Save trading info")
+        current_positions = self.__operation_service.positions_securities(account_id)
+        self.__csv_servce.save_positions(current_positions)
 
         try:
             if self.__today_trade_results:
