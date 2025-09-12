@@ -38,6 +38,7 @@ class ProgramConfiguration:
         )
 
         self.__trade_strategy_settings = []
+        lots_multiplier = int(config["TRADING_SETTINGS"]["MAX_LOTS_MULTIPLIER"])
         for strategy_section in config.sections():
             if strategy_section.startswith("STRATEGY_") and not strategy_section.endswith("_SETTINGS"):
                 self.__trade_strategy_settings.append(
@@ -45,7 +46,7 @@ class ProgramConfiguration:
                         name=config[strategy_section]["STRATEGY_NAME"],
                         figi=config[strategy_section]["FIGI"],
                         ticker=config[strategy_section]["TICKER"],
-                        max_lots_per_order=int(config[strategy_section]["MAX_LOTS_PER_ORDER"]),
+                        max_lots_per_order=lots_multiplier * int(config[strategy_section]["MAX_LOTS_PER_ORDER"]),
                         settings=config[strategy_section + "_SETTINGS"]
                     )
                 )
