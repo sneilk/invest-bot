@@ -187,7 +187,7 @@ class Blogger:
         return "long" if signal_type == SignalType.LONG else "short"
 
 
-    def status_message(self, positions: PositionsResponse, money_on_account: Optional[Decimal]) -> None:
+    def status_message(self, positions: PositionsResponse, money_on_account: Optional[Decimal], last_price_by_figi: dict) -> None:
         balance = positions.money[0].units
 
         securities = []
@@ -195,6 +195,9 @@ class Blogger:
             type_ = "long"
             if sec.balance < 0:
                 type_ = "short"
+                balance -= sec.balance * last_price_by_figi[sec.figi]
+            else:
+                balance += sec.balance * last_price_by_figi[sec.figi]
 
             securities.append(
                 f"Active {self.__trade_strategies[sec.figi].ticker} purchased in {type_} in {abs(sec.balance)} units."

@@ -132,6 +132,7 @@ class Trader:
         self.__today_trade_results = TradeResults()
 
         last_status_sent_at = datetime.datetime.now() - datetime.timedelta(days=1)
+        last_price_by_figi = {}
 
         async for candle in self.__stream_service.start_async_candles_stream(
                 list(strategies.keys()),
@@ -142,6 +143,8 @@ class Trader:
                 # it happens (based on API documentation)
                 logger.debug("Skip candle from past.")
                 continue
+
+            last_price_by_figi[candle.figi] = quotation_to_decimal(candle.close)
 
             # check price from candle for take or stop price levels
             current_trade_order = self.__today_trade_results.get_current_trade_order(candle.figi)
@@ -227,7 +230,7 @@ class Trader:
                 positions = self.__operation_service.get_positions(account_id=account_id)
                 money_on_account = self.__operation_service.available_rub_on_account(account_id=account_id)
                 self.__blogger.status_message(
-                    positions=positions, money_on_account=money_on_account
+                    positions=positions, money_on_account=money_on_account, last_price_by_figi=last_price_by_figi
                 )
                 last_status_sent_at = datetime.datetime.now()
 
