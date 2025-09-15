@@ -1,4 +1,5 @@
 import logging
+from typing import Optional
 
 from tinkoff.invest import AccessLevel, AccountType, AccountStatus
 
