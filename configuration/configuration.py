@@ -15,7 +15,7 @@ class ProgramConfiguration:
         config.read(file_name)
 
         self.__tinkoff_token = config["INVEST_API"]["TOKEN"]
-        self.__account_id = config["INVEST_API"]["ACCOUNT_ID"]
+        self.__account_id = config["INVEST_API"].get("ACCOUNT_ID")
         self.__csv_filename = config["BLOG"]["CSV_FILE"]
         self.__tinkoff_app_name = config["INVEST_API"]["APP_NAME"]
         self.__is_sandbox = config["INVEST_API"]["IS_SANDBOX"]

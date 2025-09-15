@@ -15,7 +15,7 @@ class AccountService:
     """
     The class encapsulate tinkoff account api
     """
-    def __init__(self, token: str, app_name: str, account_id: str) -> None:
+    def __init__(self, token: str, app_name: str, account_id: Optional[str]) -> None:
         self.__token = token
         self.__app_name = app_name
         self.__account_id = account_id
